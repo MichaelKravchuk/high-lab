@@ -1,0 +1,16 @@
+<form novalidate [formGroup]="form">
+    <ng-content select="[formHeader]"></ng-content>
+
+    <ng-container *ngFor="let control of form.childrenControls; trackBy: trackByKeyFn">
+        <ng-container
+            dynamicField
+            [fieldConfig]="control.fieldConfig"
+            [componentsByConfig]="componentsByConfig"
+            [formGroup]="form"
+            [template]="getTemplate(control.fieldConfig.key)"
+        >
+        </ng-container>
+    </ng-container>
+
+    <ng-content select="[formFooter]"></ng-content>
+</form>

@@ -1,6 +1,6 @@
 {
-  "name": "dynamic-form",
-  "version": "0.0.1",
+  "name": "@high-lab/dynamic-form",
+  "version": "0.0.1-alpha",
   "peerDependencies": {
     "@angular/common": "^12.0.5",
     "@angular/core": "^12.0.5"
