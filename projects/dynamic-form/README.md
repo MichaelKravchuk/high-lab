@@ -1,6 +1,6 @@
 # Angular Dynamic Form
 
-An angular 10+ module that allows to generate forms from by config
+An angular 10+ module that allows to generate forms by config
 
 [![npm version](https://badge.fury.io/js/@high-lab%2Fdynamic-form.svg)](//npmjs.com/package/@high-lab/dynamic-form)
 [![GitHub issues](https://img.shields.io/github/issues/MichaelKravchuk/high-lab.svg)](https://github.com/MichaelKravchuk/high-lab/issues)

@@ -7,6 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "build:dynamic-form": "ng build --project=dynamic-form",
     "publish:dynamic-form": "cd ./dist/dynamic-form && npm publish --access=public"
   },
   "private": true,

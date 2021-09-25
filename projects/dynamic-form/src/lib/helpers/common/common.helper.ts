@@ -1,4 +1,4 @@
-import { ExtendedFormArray, ExtendedFormControl, ExtendedFormGroup } from '../form-controls';
+import { ExtendedFormArray, ExtendedFormControl, ExtendedFormGroup } from '../../form-controls';
 
 export class CommonHelper {
   public static instantError(control: ExtendedFormControl | ExtendedFormGroup | ExtendedFormArray): string | null {
@@ -18,7 +18,8 @@ export class CommonHelper {
 
     const customError = control.fieldConfig.validationMessages && control.fieldConfig.validationMessages[firstKey];
     const root = control.root as ExtendedFormGroup;
-    const error = customError || root.defaultValidationMessages[firstKey] || errors[firstKey] || 'None';
+    const rootValidationMessage = root.defaultValidationMessages && root.defaultValidationMessages[firstKey]
+    const error = customError || rootValidationMessage || 'Error';
 
     if (typeof error === 'function') {
       return error(errors[firstKey]);
