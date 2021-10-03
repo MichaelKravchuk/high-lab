@@ -8,7 +8,7 @@ import {
   TemplateRef,
   ViewContainerRef
 } from '@angular/core';
-import { BaseField } from './base.field';
+import { AbstractField } from './base.field';
 import { NewComponent } from './dynamic-form.config';
 import { ExtendedFormGroup } from './form-controls';
 
@@ -20,7 +20,7 @@ export class DynamicFieldDirective implements OnChanges {
   public component!: ComponentRef<any>;
 
   @Input()
-  public fieldConfig!: BaseField;
+  public fieldConfig!: AbstractField;
 
   @Input()
   public formGroup!: ExtendedFormGroup;

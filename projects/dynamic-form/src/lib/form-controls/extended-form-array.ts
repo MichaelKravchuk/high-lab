@@ -2,7 +2,7 @@ import { EventEmitter } from '@angular/core';
 import { AbstractControl, AbstractControlOptions, AsyncValidatorFn, FormArray, ValidatorFn } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { BaseField } from '../base.field';
+import { AbstractField, ArrayField } from '../base.field';
 import { CommonHelper, RandomHelper } from '../helpers';
 
 import { ExtendedControls, ExtendedFormGroup, ExtendedFormControl } from './index';
@@ -12,7 +12,7 @@ export class ExtendedFormArray extends FormArray {
 
   public readonly controlAdded: EventEmitter<ExtendedFormGroup> = new EventEmitter();
   public readonly formFactory?: (
-    configs: BaseField[],
+    configs: AbstractField[],
     validatorOrOpts?: ValidatorFn | ValidatorFn[] | AbstractControlOptions | null,
     asyncValidator?: AsyncValidatorFn | AsyncValidatorFn[] | null
   ) => ExtendedFormGroup;
@@ -23,7 +23,7 @@ export class ExtendedFormArray extends FormArray {
   public pathFromRoot!: string;
   public controls!: Array<ExtendedControls>;
   public childrenControls!: Array<ExtendedControls>;
-  public fieldConfig: any;
+  public fieldConfig!: ArrayField;
   public canAddRow: (() => boolean) | boolean = true;
   public defaultValuePatched = false;
   public htmlInstance!: HTMLElement;
@@ -37,7 +37,7 @@ export class ExtendedFormArray extends FormArray {
               validatorOrOpts?: ValidatorFn | ValidatorFn[] | AbstractControlOptions | null,
               asyncValidator?: AsyncValidatorFn | AsyncValidatorFn[] | null,
               formFactory?: (
-                configs: BaseField[],
+                configs: AbstractField[],
                 validatorOrOpts?: ValidatorFn | ValidatorFn[] | AbstractControlOptions | null,
                 asyncValidator?: AsyncValidatorFn | AsyncValidatorFn[] | null
               ) => ExtendedFormGroup
@@ -55,6 +55,10 @@ export class ExtendedFormArray extends FormArray {
   }
 
   public get isChangedByUser(): boolean {
+    if (this.fieldConfig && typeof this.fieldConfig.checkChanges === 'function') {
+      return this.fieldConfig.checkChanges(this.defaultValuePatched, this.value);
+    }
+
     return this.defaultValuePatched && this.controls.some(control => control.isChangedByUser);
   }
 

@@ -3,14 +3,11 @@ import {
   AbstractControl,
   AbstractControlOptions,
   AsyncValidatorFn,
-  FormArray,
-  FormControl,
-  FormGroup,
   ValidatorFn
 } from '@angular/forms';
 import { of } from 'rxjs';
 import { mergeAll } from 'rxjs/operators';
-import { AbstractField, GroupField } from './base.field';
+import { AbstractField, ControlField, GroupField } from './base.field';
 import { ExtendedControls, ExtendedFormArray, ExtendedFormControl, ExtendedFormGroup } from './form-controls';
 import { AbstractFieldInterface, RelatedFieldInterface } from './interfaces/field-config.interface';
 
@@ -76,11 +73,9 @@ function createFormArrayControl(config: AbstractField, parentPath: string, rootF
 
 
 function debouncer(config: AbstractField, parentPath: string, rootForm: ExtendedFormGroup): ExtendedControls {
-  const formControlPrototype = config.formControl.prototype;
-
-  if (formControlPrototype instanceof FormControl) {
+  if (config instanceof ControlField) {
     return createFormControl(config, parentPath);
-  } else if (formControlPrototype instanceof FormGroup) {
+  } else if (config instanceof GroupField) {
     return createFormGroupControl(config as GroupField, parentPath, rootForm);
   }
 
@@ -159,7 +154,7 @@ function addControl(
   config: AbstractField,
   rootForm: ExtendedFormGroup
 ) {
-  control.fieldConfig = config;
+  control.fieldConfig = config as any;
   parent.addControl(config.key, control, { emitEvent: false });
 
   if (rootForm.supposeControls.has(control.pathFromRoot)) {

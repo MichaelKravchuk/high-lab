@@ -2,8 +2,8 @@ import { AbstractControl, AbstractControlOptions, AsyncValidatorFn, ValidatorFn 
 import { ValidationMessages } from './dynamic-form.config';
 import { ExtendedFormArray, ExtendedFormControl, ExtendedFormGroup } from './form-controls';
 import {
-  AbstractFieldInterface,
-  BaseFieldInterface,
+  AbstractFieldInterface, ArrayFieldInterface,
+  ControlFieldInterface,
   GroupFieldInterface,
   RelatedFieldInterface
 } from './interfaces/field-config.interface';
@@ -12,9 +12,7 @@ export type NewFormControl = new (...params: any) => ExtendedFormControl | Exten
 
 
 export class AbstractField implements AbstractFieldInterface {
-  public static readonly type: string;
-
-  public formControl: NewFormControl = ExtendedFormControl;
+  public formControl: NewFormControl;
   public validatorOrOpts?: ValidatorFn | ValidatorFn[] | AbstractControlOptions | null;
   public asyncValidator?: AsyncValidatorFn | AsyncValidatorFn[] | null;
   public key: string;
@@ -24,6 +22,7 @@ export class AbstractField implements AbstractFieldInterface {
   public validationMessages?: ValidationMessages;
   public relatedFields?: RelatedFieldInterface[];
   public class?: string;
+  public checkChanges?: (defaultValue: any, currentValue: any) => boolean;
 
   constructor(options: AbstractFieldInterface) {
     this.validatorOrOpts = options.validatorOrOpts;
@@ -34,6 +33,8 @@ export class AbstractField implements AbstractFieldInterface {
     this.validationMessages = options.validationMessages;
     this.relatedFields = options.relatedFields;
     this.class = options.class;
+    this.checkChanges = options.checkChanges;
+    this.formControl = ExtendedFormControl;
   }
 
   public get type(): string {
@@ -42,7 +43,7 @@ export class AbstractField implements AbstractFieldInterface {
 }
 
 
-export class BaseField extends AbstractField implements BaseFieldInterface {
+export class ControlField extends AbstractField implements ControlFieldInterface {
   private readonly labelFn?: (form: AbstractControl) => string;
   private readonly labelString?: string;
 
@@ -51,7 +52,7 @@ export class BaseField extends AbstractField implements BaseFieldInterface {
   public minLength?: number;
   public maxLength?: number;
 
-  constructor(options: BaseFieldInterface) {
+  constructor(options: ControlFieldInterface) {
     super(options);
 
     if (typeof options.label === 'function') {
@@ -64,6 +65,7 @@ export class BaseField extends AbstractField implements BaseFieldInterface {
     this.placeholder = options.placeholder;
     this.minLength = options.minLength;
     this.maxLength = options.maxLength;
+    this.formControl = ExtendedFormControl;
   }
 
   public label(form: AbstractControl): string {
@@ -78,11 +80,23 @@ export class BaseField extends AbstractField implements BaseFieldInterface {
 
 export class GroupField extends AbstractField implements GroupFieldInterface {
   public data: any;
-  public configs: Array<AbstractField | GroupField>;
+  public configs: Array<AbstractField>;
 
   constructor(options: GroupFieldInterface) {
     super(options);
     this.data = options.data;
     this.configs = options.configs;
+    this.formControl = ExtendedFormGroup;
+  }
+}
+
+
+export class ArrayField extends AbstractField implements ArrayFieldInterface {
+  public configs: Array<AbstractField>;
+
+  constructor(options: ArrayFieldInterface) {
+    super(options)
+    this.configs = options.configs;
+    this.formControl = ExtendedFormArray;
   }
 }
