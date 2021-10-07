@@ -30,7 +30,7 @@ export class CommonHelper {
 
   public static getFirstInvalidControl(control: ExtendedFormGroup | ExtendedFormArray): ExtendedFormControl | null {
     for (const item of control.childrenControls) {
-      if (item.valid) {
+      if (!item.invalid) {
         continue;
       }
 

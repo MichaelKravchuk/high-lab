@@ -7,7 +7,11 @@ An angular 10+ module that allows to generate forms by config
 [![GitHub stars](https://img.shields.io/github/stars/MichaelKravchuk/high-lab.svg)](https://github.com/MichaelKravchuk/high-lab/stargazers)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/MichaelKravchuk/high-lab/master/LICENSE)
 
+## Demo
+http://high-lab.com.ua/dynamic-form
+
 ## Usage
+
 
 **Step 1:** Install @high-lab/dynamic-form
 
@@ -64,14 +68,14 @@ export function VALIDATION_MESSAGES() {
 export class AppModule { }
 ```
 
-**Example of config:** All your config must extend ```AbstractField``` or ```BaseField``` class
+**Example of config:** All your config must extend ```AbstractField``` or ```ControlField``` class
 
 ```ts
-import { BaseField, BaseFieldInterface } from '@high-lab/dynamic-form';
+import { ControlField, ControlFieldInterface } from '@high-lab/dynamic-form';
 
-export type CheckboxFieldInterface = BaseFieldInterface;
+export type CheckboxFieldInterface = ControlFieldInterface;
 
-export class CheckboxField extends BaseField {
+export class CheckboxField extends ControlField {
   public static readonly type = 'checkbox';
 
   constructor(options: CheckboxFieldInterface) {

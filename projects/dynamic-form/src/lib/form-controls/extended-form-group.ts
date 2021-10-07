@@ -1,6 +1,6 @@
 import { FormGroup } from '@angular/forms';
 import { Observable, Subject } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { filter, map, startWith } from 'rxjs/operators';
 import { GroupField } from '../base.field';
 import { ValidationMessages } from '../dynamic-form.config';
 import { CommonHelper, RandomHelper } from '../helpers';
@@ -120,6 +120,9 @@ export class ExtendedFormGroup extends FormGroup {
       root.supposeControls.set(pathStr, new Subject());
     }
 
-    return root.supposeControls.get(pathStr) as any;
+    const subject = root.supposeControls.get(pathStr) as Subject<any>;
+    return subject.pipe(
+      filter(v => !!v)
+    );
   }
 }
