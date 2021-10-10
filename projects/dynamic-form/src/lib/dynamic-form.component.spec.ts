@@ -1,5 +1,4 @@
 import { CommonModule } from '@angular/common';
-import { TemplateRef } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { createDynamicForm } from './common';

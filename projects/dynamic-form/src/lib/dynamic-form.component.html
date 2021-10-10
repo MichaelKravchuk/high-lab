@@ -4,7 +4,6 @@
     <ng-container *ngFor="let control of form.childrenControls; trackBy: trackByKeyFn"
                   dynamicField
                   [fieldConfig]="control.fieldConfig"
-                  [componentsByConfig]="componentsByConfig"
                   [formGroup]="form"
                   [template]="getTemplate(control.fieldConfig.key)"
     ></ng-container>

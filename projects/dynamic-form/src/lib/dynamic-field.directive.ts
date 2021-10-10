@@ -1,7 +1,7 @@
 import {
   ComponentFactoryResolver,
   ComponentRef,
-  Directive,
+  Directive, Inject,
   Input,
   OnChanges,
   SimpleChanges,
@@ -11,6 +11,7 @@ import {
 import { AbstractField } from './base.field';
 import { NewComponent } from './dynamic-form.config';
 import { ExtendedFormArray, ExtendedFormGroup } from './form-controls';
+import { DYNAMIC_FORM_CONFIG_MAP } from './injectors';
 
 
 @Directive({
@@ -31,16 +32,15 @@ export class DynamicFieldDirective implements OnChanges {
   @Input()
   public rowIndex!: number;
 
-  @Input()
-  public componentsByConfig!: Map<string, NewComponent>;
-
   constructor(private readonly viewContainerRef: ViewContainerRef,
               private readonly componentFactoryResolver: ComponentFactoryResolver,
+              @Inject(DYNAMIC_FORM_CONFIG_MAP)
+              private readonly componentsByConfig: Map<any, NewComponent>,
   ) {
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
-    if (changes.componentsByConfig && changes.componentsByConfig.currentValue) {
+    if (changes.fieldConfig && changes.fieldConfig.currentValue) {
       const constructor = (this.fieldConfig as any).constructor;
       if (!this.componentsByConfig.get(constructor)) {
         throw new Error(

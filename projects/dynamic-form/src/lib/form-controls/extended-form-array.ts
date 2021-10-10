@@ -1,11 +1,10 @@
-import { EventEmitter } from '@angular/core';
-import { AbstractControl, AbstractControlOptions, AsyncValidatorFn, FormArray, ValidatorFn } from '@angular/forms';
+import { AbstractControlOptions, AsyncValidatorFn, FormArray, ValidatorFn } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { AbstractField, ArrayField } from '../base.field';
+import { ArrayField } from '../base.field';
 import { CommonHelper, RandomHelper } from '../helpers';
 
-import { ExtendedControls, ExtendedFormGroup, ExtendedFormControl } from './index';
+import { ExtendedFormControl, ExtendedFormGroup } from './index';
 
 export class ExtendedFormArray extends FormArray {
   public readonly id = RandomHelper.NumId;
@@ -13,8 +12,8 @@ export class ExtendedFormArray extends FormArray {
   private lastPatchedValue: any;
 
   public pathFromRoot!: string;
-  public controls!: Array<ExtendedControls>;
-  public childrenControls!: Array<ExtendedControls>;
+  public controls!: Array<ExtendedFormGroup>;
+  public childrenControls!: Array<ExtendedFormGroup>;
   public fieldConfig!: ArrayField;
   public canAddRow: (() => boolean) | boolean = true;
   public defaultValuePatched = false;
@@ -100,25 +99,25 @@ export class ExtendedFormArray extends FormArray {
   }
 
   public resetToDefaultValue(options: { onlySelf?: boolean, emitEvent?: boolean, useAsDefault?: boolean } = {}): void {
-    return;
-    // if (!this.defaultValuePatched) {
-    //   return;
-    // }
+    if (!this.defaultValuePatched) {
+      return;
+    }
 
-    // if (Array.isArray(this.lastPatchedValue)) {
-    //   for (let i = this.controls.length; i > this.lastPatchedValue.length; i--) {
-    //     this.removeControl(i - 1);
-    //   }
-    //
-    //   for (let i = this.controls.length; i < this.lastPatchedValue.length; i++) {
-    //     const control = this.addControl();
-    //     control.lastPatchedValue = this.lastPatchedValue[i];
-    //     control.defaultValuePatched = true;
-    //   }
-    //
-    //   this.controls.forEach(control => control.resetToDefaultValue({ onlySelf: true, ...options }));
-    //   this.updateValueAndValidity({ onlySelf: true });
-    // }
+    if (Array.isArray(this.lastPatchedValue)) {
+      for (let i = this.controls.length; i > this.lastPatchedValue.length; i--) {
+        this.removeControl(i - 1);
+      }
+
+      for (let i = this.controls.length; i < this.lastPatchedValue.length; i++) {
+        this.addControl();
+      }
+
+      this.controls.forEach((control, index) => {
+        control.patchValue(this.lastPatchedValue[index], { onlySelf: true, useAsDefault: true, ...options })
+      });
+
+      this.updateValueAndValidity({ onlySelf: true });
+    }
   }
 
   public updateChildrenControls(): void {
