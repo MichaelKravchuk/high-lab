@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { AbstractField } from './base.field';
 import { NewComponent } from './dynamic-form.config';
-import { ExtendedFormGroup } from './form-controls';
+import { ExtendedFormArray, ExtendedFormGroup } from './form-controls';
 
 
 @Directive({
@@ -23,13 +23,10 @@ export class DynamicFieldDirective implements OnChanges {
   public fieldConfig!: AbstractField;
 
   @Input()
-  public formGroup!: ExtendedFormGroup;
+  public formGroup!: ExtendedFormGroup | ExtendedFormArray;
 
   @Input()
   public template!: TemplateRef<any>;
-
-  @Input()
-  public hideLabel!: boolean;
 
   @Input()
   public rowIndex!: number;
@@ -44,14 +41,15 @@ export class DynamicFieldDirective implements OnChanges {
 
   public ngOnChanges(changes: SimpleChanges): void {
     if (changes.componentsByConfig && changes.componentsByConfig.currentValue) {
-      if (!this.componentsByConfig.get(this.fieldConfig.type)) {
+      const constructor = (this.fieldConfig as any).constructor;
+      if (!this.componentsByConfig.get(constructor)) {
         throw new Error(
-          `Trying to use an unsupported type (${this.fieldConfig.type}).`
+          `Trying to use an unsupported type (${constructor}).`
         );
       }
 
       const component = this.componentFactoryResolver.resolveComponentFactory(
-        this.componentsByConfig.get(this.fieldConfig.type) as any
+        this.componentsByConfig.get(constructor) as any
       );
 
       this.component = this.viewContainerRef.createComponent(component);
@@ -63,7 +61,6 @@ export class DynamicFieldDirective implements OnChanges {
     this.component.instance.fieldConfig = this.fieldConfig;
     this.component.instance.formGroup = this.formGroup;
     this.component.instance.template = this.template;
-    this.component.instance.hideLabel = this.hideLabel;
     this.component.instance.rowIndex = this.rowIndex;
   }
 }

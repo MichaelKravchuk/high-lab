@@ -36,10 +36,6 @@ export class AbstractField implements AbstractFieldInterface {
     this.checkChanges = options.checkChanges;
     this.formControl = ExtendedFormControl;
   }
-
-  public get type(): string {
-    return this.constructor.name;
-  }
 }
 
 
@@ -79,12 +75,10 @@ export class ControlField extends AbstractField implements ControlFieldInterface
 
 
 export class GroupField extends AbstractField implements GroupFieldInterface {
-  public data: any;
   public configs: Array<AbstractField>;
 
   constructor(options: GroupFieldInterface) {
     super(options);
-    this.data = options.data;
     this.configs = options.configs;
     this.formControl = ExtendedFormGroup;
   }

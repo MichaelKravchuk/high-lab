@@ -8,18 +8,10 @@ import { CommonHelper, RandomHelper } from '../helpers';
 import { ExtendedControls, ExtendedFormGroup, ExtendedFormControl } from './index';
 
 export class ExtendedFormArray extends FormArray {
-  public static type = 'FormArray';
-
-  public readonly controlAdded: EventEmitter<ExtendedFormGroup> = new EventEmitter();
-  public readonly formFactory?: (
-    configs: AbstractField[],
-    validatorOrOpts?: ValidatorFn | ValidatorFn[] | AbstractControlOptions | null,
-    asyncValidator?: AsyncValidatorFn | AsyncValidatorFn[] | null
-  ) => ExtendedFormGroup;
+  public readonly id = RandomHelper.NumId;
 
   private lastPatchedValue: any;
 
-  public id = RandomHelper.NumId;
   public pathFromRoot!: string;
   public controls!: Array<ExtendedControls>;
   public childrenControls!: Array<ExtendedControls>;
@@ -33,17 +25,11 @@ export class ExtendedFormArray extends FormArray {
     map(() => CommonHelper.instantError(this))
   );
 
-  constructor(controls: AbstractControl[],
+  constructor(public formGroupFabric: () => ExtendedFormGroup,
               validatorOrOpts?: ValidatorFn | ValidatorFn[] | AbstractControlOptions | null,
               asyncValidator?: AsyncValidatorFn | AsyncValidatorFn[] | null,
-              formFactory?: (
-                configs: AbstractField[],
-                validatorOrOpts?: ValidatorFn | ValidatorFn[] | AbstractControlOptions | null,
-                asyncValidator?: AsyncValidatorFn | AsyncValidatorFn[] | null
-              ) => ExtendedFormGroup
   ) {
-    super(controls, validatorOrOpts, asyncValidator);
-    this.formFactory = formFactory;
+    super([], validatorOrOpts, asyncValidator);
   }
 
   public get(path: Array<string | number> | string): ExtendedFormControl {
@@ -69,6 +55,10 @@ export class ExtendedFormArray extends FormArray {
 
     if (options.useAsDefault) {
       this.defaultValuePatched = true;
+    }
+
+    for (let i = this.controls.length; i > value.length; i--) {
+      this.removeControl(i - 1);
     }
 
     for (let i = this.controls.length; i < value.length; i++) {
@@ -110,7 +100,25 @@ export class ExtendedFormArray extends FormArray {
   }
 
   public resetToDefaultValue(options: { onlySelf?: boolean, emitEvent?: boolean, useAsDefault?: boolean } = {}): void {
-    this.controls.forEach(control => control.resetToDefaultValue({ onlySelf: true, ...options }));
+    return;
+    // if (!this.defaultValuePatched) {
+    //   return;
+    // }
+
+    // if (Array.isArray(this.lastPatchedValue)) {
+    //   for (let i = this.controls.length; i > this.lastPatchedValue.length; i--) {
+    //     this.removeControl(i - 1);
+    //   }
+    //
+    //   for (let i = this.controls.length; i < this.lastPatchedValue.length; i++) {
+    //     const control = this.addControl();
+    //     control.lastPatchedValue = this.lastPatchedValue[i];
+    //     control.defaultValuePatched = true;
+    //   }
+    //
+    //   this.controls.forEach(control => control.resetToDefaultValue({ onlySelf: true, ...options }));
+    //   this.updateValueAndValidity({ onlySelf: true });
+    // }
   }
 
   public updateChildrenControls(): void {
@@ -118,20 +126,18 @@ export class ExtendedFormArray extends FormArray {
   }
 
   public addControl(): any {
-    if (!this.formFactory) {
-      console.error('ExtendedFormArray required formFactory');
-      return;
-    }
-
-    const control = this.formFactory(this.fieldConfig.configs);
+    const control = this.formGroupFabric();
 
     if (this.disabled) {
       control.disable({ emitEvent: false });
     }
 
     this.push(control);
-    this.controlAdded.emit(control);
     return control;
+  }
+
+  public removeControl(index: number): void {
+    this.removeAt(index)
   }
 
   public enableAllControlByKey(key: string): void {

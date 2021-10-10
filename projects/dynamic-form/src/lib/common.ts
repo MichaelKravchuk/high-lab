@@ -7,7 +7,7 @@ import {
 } from '@angular/forms';
 import { of } from 'rxjs';
 import { mergeAll } from 'rxjs/operators';
-import { AbstractField, ControlField, GroupField } from './base.field';
+import { AbstractField, ArrayField, ControlField, GroupField } from './base.field';
 import { ExtendedControls, ExtendedFormArray, ExtendedFormControl, ExtendedFormGroup } from './form-controls';
 import { AbstractFieldInterface, RelatedFieldInterface } from './interfaces/field-config.interface';
 
@@ -61,25 +61,25 @@ function createFormGroupControl(config: GroupField, parentPath: string, rootForm
   return parent;
 }
 
-function createFormArrayControl(config: AbstractField, parentPath: string, rootForm: ExtendedFormGroup): ExtendedFormArray {
-  const controls: { [key: string]: AbstractControl } = {};
+function createFormArrayControl(config: ArrayField, parentPath: string, rootForm: ExtendedFormGroup): ExtendedFormArray {
+  const parent = new ExtendedFormArray(() => {
+    return createFormGroupControl(config, parent.pathFromRoot, rootForm);
+  }, config.validatorOrOpts, config.asyncValidator) as any;
 
-  // configs.forEach((config, orderIndex) => {
-  //
-  // });
+  parent.pathFromRoot = joinPath(parentPath, config.key);
 
-  return controls as any;
+  return parent;
 }
 
 
 function debouncer(config: AbstractField, parentPath: string, rootForm: ExtendedFormGroup): ExtendedControls {
-  if (config instanceof ControlField) {
-    return createFormControl(config, parentPath);
-  } else if (config instanceof GroupField) {
+  if (config instanceof GroupField) {
     return createFormGroupControl(config as GroupField, parentPath, rootForm);
+  } else if (config instanceof ArrayField) {
+    return createFormArrayControl(config, parentPath, rootForm);
   }
 
-  return createFormArrayControl(config, parentPath, rootForm);
+  return createFormControl(config, parentPath);
 }
 
 

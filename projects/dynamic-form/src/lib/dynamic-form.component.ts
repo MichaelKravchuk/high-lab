@@ -9,7 +9,7 @@ import { DYNAMIC_FORM_CONFIG, DYNAMIC_FORM_VALIDATION_MESSAGES } from './injecto
   styleUrls: ['./dynamic-form.component.scss'],
 })
 export class DynamicFormComponent implements OnChanges {
-  public readonly componentsByConfig = new Map<string, NewComponent>();
+  public readonly componentsByConfig = new Map<any, NewComponent>();
 
   @Input()
   public form!: ExtendedFormGroup;
@@ -22,7 +22,7 @@ export class DynamicFormComponent implements OnChanges {
               @Inject(DYNAMIC_FORM_VALIDATION_MESSAGES)
               private readonly validationMessages: ValidationMessagesFn
   ) {
-    this.config.forEach(v => this.componentsByConfig.set(v.config.prototype.type, v.component));
+    this.config.forEach(v => this.componentsByConfig.set(v.config, v.component));
   }
 
   public ngOnChanges(changes: SimpleChanges) {
