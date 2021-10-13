@@ -6,7 +6,7 @@ import {
   ValidatorFn
 } from '@angular/forms';
 import { of } from 'rxjs';
-import { mergeAll } from 'rxjs/operators';
+import { mergeAll, pairwise } from 'rxjs/operators';
 import { AbstractField, ArrayField, ControlField, GroupField } from './base.field';
 import { ExtendedControls, ExtendedFormArray, ExtendedFormControl, ExtendedFormGroup } from './form-controls';
 import { AbstractFieldInterface, RelatedFieldInterface } from './interfaces/field-config.interface';
@@ -95,9 +95,10 @@ function postProcess(control: AbstractControl & any, config: AbstractField, root
   const differ = new DefaultIterableDiffer<RelatedFieldInterface>(trackByItem);
 
   of(of(initValueStr), control.valueChanges).pipe(
-    mergeAll()
-  ).subscribe(() => {
-    const nextFieldsState = relatedFields.filter(v => controlIsVisible(v, control));
+    mergeAll(),
+    pairwise(),
+  ).subscribe((controlValues: any[]) => {
+    const nextFieldsState = relatedFields.filter(v => controlIsVisible(v, controlValues, control));
     const diff = differ.diff(nextFieldsState);
 
     if (!diff) {
@@ -108,7 +109,7 @@ function postProcess(control: AbstractControl & any, config: AbstractField, root
       let relatedFieldConfig = v.item.configs;
 
       if (typeof relatedFieldConfig === 'function') {
-        relatedFieldConfig = relatedFieldConfig(control.value, control);
+        relatedFieldConfig = relatedFieldConfig(controlValues[1], controlValues[0], control);
       }
 
       removeControls(relatedFieldConfig, control.parent);
@@ -119,7 +120,7 @@ function postProcess(control: AbstractControl & any, config: AbstractField, root
       let relatedFieldConfig = v.item.configs;
 
       if (typeof relatedFieldConfig === 'function') {
-        relatedFieldConfig = relatedFieldConfig(control.value, control);
+        relatedFieldConfig = relatedFieldConfig(controlValues[0], controlValues[1], control);
       }
 
       relatedFieldConfig.forEach((childConfig: AbstractField, index) => {
@@ -177,8 +178,9 @@ function removeControls(configs: Array<AbstractFieldInterface>, parent: Extended
 }
 
 
-function controlIsVisible(config: RelatedFieldInterface, control: AbstractControl): boolean {
-  const controlValue = control.value;
+function controlIsVisible(config: RelatedFieldInterface, controlValues: any[], control: AbstractControl): boolean {
+  const prevControlValue = controlValues[0];
+  const controlValue = controlValues[1];
 
   switch (typeof config.checkVisibility) {
     case 'boolean':
@@ -188,7 +190,7 @@ function controlIsVisible(config: RelatedFieldInterface, control: AbstractContro
     }
     case 'function': {
       // @ts-ignore
-      return config.checkVisibility(controlValue, control);
+      return config.checkVisibility(controlValue, prevControlValue, control);
     }
     case 'object': {
       if (Array.isArray(config.checkVisibility)) {

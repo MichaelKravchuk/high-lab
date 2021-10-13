@@ -12,7 +12,7 @@ export interface AbstractFieldInterface {
   validationMessages?: ValidationMessages;
   relatedFields?: RelatedFieldInterface[];
   class?: string;
-  checkChanges?: (defaultValue: any, currentValue: any) => boolean;
+  checkChanges?: (currentValue: any, defaultValue: any) => boolean;
 }
 
 export interface ControlFieldInterface extends AbstractFieldInterface {
@@ -37,8 +37,8 @@ export interface RelatedFieldInterface {
   checkVisibility: RelatedFieldsCheckVisibilityFunction | string | number | boolean | Array<string & number>;
 }
 
-type RelatedFieldsCheckVisibilityFunction = (value: any, control: AbstractControl) => boolean;
-type RelatedFieldsConfigFunction = (value: any, control: AbstractControl) => AbstractField[];
+type RelatedFieldsCheckVisibilityFunction = (currentValue: any, prevValue: any, control: AbstractControl) => boolean;
+type RelatedFieldsConfigFunction = (currentValue: any, prevValue: any, control: AbstractControl) => AbstractField[];
 
 export interface FieldOption<T = any> {
   label: string;

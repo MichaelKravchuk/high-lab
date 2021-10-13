@@ -41,7 +41,7 @@ export class ExtendedFormArray extends FormArray {
 
   public get isChangedByUser(): boolean {
     if (this.fieldConfig && typeof this.fieldConfig.checkChanges === 'function') {
-      return this.fieldConfig.checkChanges(this.defaultValuePatched, this.value);
+      return this.fieldConfig.checkChanges(this.value, this.defaultValuePatched);
     }
 
     return this.defaultValuePatched && this.controls.some(control => control.isChangedByUser);

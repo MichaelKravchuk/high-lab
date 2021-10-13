@@ -34,7 +34,7 @@ export class ExtendedFormGroup extends FormGroup {
     }
 
     if (this.fieldConfig && typeof this.fieldConfig.checkChanges === 'function') {
-      return this.fieldConfig.checkChanges(this.defaultValuePatched, this.value);
+      return this.fieldConfig.checkChanges(this.value, this.defaultValuePatched);
     }
 
     for (const control of Object.values(this.controls)) {
@@ -86,7 +86,7 @@ export class ExtendedFormGroup extends FormGroup {
     Object.values(this.controls).forEach(control => control.resetDefaultValue());
   }
 
-  public resetToDefaultValue(options: { onlySelf?: boolean, emitEvent?: boolean, useAsDefault?: boolean } = {}): void {
+  public resetToDefaultValue(options: { onlySelf?: boolean, emitEvent?: boolean } = {}): void {
     Object.values(this.controls).forEach(control => control.resetToDefaultValue({ ...options, onlySelf: true }));
     this.updateValueAndValidity();
   }

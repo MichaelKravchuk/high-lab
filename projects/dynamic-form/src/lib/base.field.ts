@@ -22,7 +22,7 @@ export class AbstractField implements AbstractFieldInterface {
   public validationMessages?: ValidationMessages;
   public relatedFields?: RelatedFieldInterface[];
   public class?: string;
-  public checkChanges?: (defaultValue: any, currentValue: any) => boolean;
+  public checkChanges?: (currentValue: any, defaultValue: any) => boolean;
 
   constructor(options: AbstractFieldInterface) {
     this.validatorOrOpts = options.validatorOrOpts;

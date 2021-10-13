@@ -23,7 +23,7 @@ export class ExtendedFormControl extends FormControl {
 
   public get isChangedByUser(): boolean {
     if (this.fieldConfig && typeof this.fieldConfig.checkChanges === 'function') {
-      return this.fieldConfig.checkChanges(this.defaultValue, this.value);
+      return this.fieldConfig.checkChanges(this.value, this.defaultValue);
     }
 
     return !(this.defaultValue === this.value || (this.defaultValue === null && this.value === ''));
@@ -49,7 +49,7 @@ export class ExtendedFormControl extends FormControl {
     this.defaultValuePatched = false;
   }
 
-  public resetToDefaultValue(options: { onlySelf?: boolean, emitEvent?: boolean, useAsDefault?: boolean } = {}): void {
+  public resetToDefaultValue(options: { onlySelf?: boolean, emitEvent?: boolean } = {}): void {
     this.patchValue(this.defaultValue, options);
   }
 }
