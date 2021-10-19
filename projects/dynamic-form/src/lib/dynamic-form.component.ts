@@ -1,7 +1,8 @@
-import { Component, Inject, Input, OnChanges, SimpleChanges, TemplateRef } from '@angular/core';
+import { Component, Inject, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { NewComponent, ValidationMessagesFn } from './dynamic-form.config';
 import { ExtendedControls, ExtendedFormGroup } from './form-controls';
 import { DYNAMIC_FORM_VALIDATION_MESSAGES } from './injectors';
+import { DynamicFormTemplate } from './interfaces';
 
 @Component({
   selector: 'dynamic-form',
@@ -15,7 +16,7 @@ export class DynamicFormComponent implements OnChanges {
   public form!: ExtendedFormGroup;
 
   @Input()
-  public templates: { [key: string]: TemplateRef<any> | { [key: string]: TemplateRef<any> } } = {} as any;
+  public templates: DynamicFormTemplate = {};
 
   constructor(@Inject(DYNAMIC_FORM_VALIDATION_MESSAGES)
               private readonly validationMessages: ValidationMessagesFn

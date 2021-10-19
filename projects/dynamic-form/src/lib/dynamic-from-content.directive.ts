@@ -31,7 +31,7 @@ export class DynamicFormContentDirective implements OnChanges {
         if (this.context.$implicit.hasTemplateRef && !this.customViewRef) {
             this.clearViewExclude(this.customViewRef);
             this.customViewRef = this.viewContainer.createEmbeddedView(
-                this.context.$implicit.template as any,
+                this.context.$implicit.templateRef as any,
                 { component: this.context.$implicit, formTemplate: this.thenTemplateRef }
             );
         } else if (this.thenTemplateRef && !this.thenViewRef) {

@@ -1,17 +1,18 @@
 import {
   ComponentFactoryResolver,
   ComponentRef,
-  Directive, Inject,
+  Directive,
+  Inject,
   Input,
   OnChanges,
   SimpleChanges,
-  TemplateRef,
   ViewContainerRef
 } from '@angular/core';
 import { AbstractField } from './base.field';
 import { NewComponent } from './dynamic-form.config';
 import { ExtendedFormArray, ExtendedFormGroup } from './form-controls';
 import { DYNAMIC_FORM_CONFIG_MAP } from './injectors';
+import { DynamicFormTemplate } from './interfaces';
 
 
 @Directive({
@@ -27,7 +28,7 @@ export class DynamicFieldDirective implements OnChanges {
   public formGroup!: ExtendedFormGroup | ExtendedFormArray;
 
   @Input()
-  public template!: TemplateRef<any>;
+  public template!: DynamicFormTemplate;
 
   @Input()
   public rowIndex!: number;
