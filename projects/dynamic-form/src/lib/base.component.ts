@@ -39,7 +39,7 @@ export class BaseFieldComponent implements OnInit, AfterViewInit {
     return this.fieldConfig.class || '';
   }
 
-  @ViewChild(EditableFieldDirective, { read: ElementRef, static: true })
+  @ViewChild(EditableFieldDirective, { read: ElementRef, static: false })
   public readonly editableField?: ElementRef<HTMLElement>;
 
   constructor(protected readonly elementRef: ElementRef) {}
