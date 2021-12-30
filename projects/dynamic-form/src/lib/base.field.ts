@@ -23,6 +23,7 @@ export class AbstractField implements AbstractFieldInterface {
   public relatedFields?: RelatedFieldInterface[];
   public class?: string;
   public checkChanges?: (currentValue: any, defaultValue: any) => boolean;
+  public autofocus?: boolean;
 
   constructor(options: AbstractFieldInterface) {
     this.validatorOrOpts = options.validatorOrOpts;
@@ -34,6 +35,7 @@ export class AbstractField implements AbstractFieldInterface {
     this.relatedFields = options.relatedFields;
     this.class = options.class;
     this.checkChanges = options.checkChanges;
+    this.autofocus = options.autofocus;
     this.formControl = ExtendedFormControl;
   }
 }

@@ -12,6 +12,10 @@ import { ExtendedControls, ExtendedFormArray, ExtendedFormControl, ExtendedFormG
 import { AbstractFieldInterface, RelatedFieldInterface } from './interfaces/field-config.interface';
 
 
+function isNullConfig(config: AbstractField): boolean {
+  return config === null || config === undefined || !config;
+}
+
 export function createDynamicForm(
   configList: AbstractField[],
   validatorOrOpts?: ValidatorFn | ValidatorFn[] | AbstractControlOptions | null,
@@ -21,6 +25,10 @@ export function createDynamicForm(
   form.pathFromRoot = '';
 
   configList.forEach((config, index) => {
+    if (isNullConfig(config)) {
+      return;
+    }
+
     config.internalOrder = config.hasOwnProperty('order') ? config.order : index;
     const control = debouncer(config, form.pathFromRoot, form);
     addControl(form, control, config, form);
@@ -50,6 +58,10 @@ function createFormGroupControl(config: GroupField, parentPath: string, rootForm
   parent.pathFromRoot = joinPath(parentPath, config.key);
 
   config.configs.forEach((configChild, index) => {
+    if (isNullConfig(configChild)) {
+      return;
+    }
+
     configChild.internalOrder = configChild.hasOwnProperty('order') ? configChild.order : index;
     const control = debouncer(configChild, parent.pathFromRoot, rootForm);
     addControl(parent, control, configChild, rootForm);
@@ -124,6 +136,10 @@ function postProcess(control: AbstractControl & any, config: AbstractField, root
       }
 
       relatedFieldConfig.forEach((childConfig: AbstractField, index) => {
+        if (isNullConfig(childConfig)) {
+          return;
+        }
+
         childConfig.internalOrder = childConfig.hasOwnProperty('order') ? childConfig.order : index;
         const childControl = debouncer(childConfig, control.parent.pathFromRoot, rootForm);
 

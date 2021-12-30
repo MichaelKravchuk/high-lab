@@ -1,4 +1,13 @@
-import { Component, ElementRef, HostBinding, Input, OnInit, TemplateRef } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  HostBinding,
+  Input,
+  OnInit,
+  TemplateRef,
+  ViewChild
+} from '@angular/core';
 import { AbstractField } from './base.field';
 import { ExtendedFormGroup } from './form-controls';
 import { DynamicFormTemplate } from './interfaces';
@@ -6,7 +15,7 @@ import { DynamicFormTemplate } from './interfaces';
 @Component({
   template: '',
 })
-export class BaseFieldComponent implements OnInit {
+export class BaseFieldComponent implements OnInit, AfterViewInit {
   public readonly self = this;
 
   @Input()
@@ -23,14 +32,23 @@ export class BaseFieldComponent implements OnInit {
     return this.fieldConfig.class || '';
   }
 
+  @ViewChild('editableField', { read: ElementRef, static: true })
+  public readonly editableField?: ElementRef<HTMLElement>;
+
   constructor(protected readonly elementRef: ElementRef) {}
 
   public ngOnInit() {
     this.control.htmlInstance = this.elementRef.nativeElement;
   }
 
+  public ngAfterViewInit() {
+    if (this.fieldConfig.autofocus && this.editableField instanceof ElementRef) {
+      this.editableField.nativeElement.focus();
+    }
+  }
+
   public get control(): any {
-    return this.formGroup.get(this.fieldConfig.key);
+    return this.formGroup.controls[this.fieldConfig.key];
   }
 
   public get required(): boolean {
