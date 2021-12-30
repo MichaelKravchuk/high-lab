@@ -1,6 +1,6 @@
 import {
   AfterViewInit,
-  Component,
+  Component, Directive,
   ElementRef,
   HostBinding,
   Input,
@@ -11,6 +11,13 @@ import {
 import { AbstractField } from './base.field';
 import { ExtendedFormGroup } from './form-controls';
 import { DynamicFormTemplate } from './interfaces';
+
+
+@Directive({
+  selector: '[editableField]'
+})
+export class EditableFieldDirective {}
+
 
 @Component({
   template: '',
@@ -32,7 +39,7 @@ export class BaseFieldComponent implements OnInit, AfterViewInit {
     return this.fieldConfig.class || '';
   }
 
-  @ViewChild('editableField', { read: ElementRef, static: true })
+  @ViewChild(EditableFieldDirective, { read: ElementRef, static: true })
   public readonly editableField?: ElementRef<HTMLElement>;
 
   constructor(protected readonly elementRef: ElementRef) {}

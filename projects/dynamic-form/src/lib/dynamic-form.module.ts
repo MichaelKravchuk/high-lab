@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { BaseFieldComponent } from './base.component';
+import { BaseFieldComponent, EditableFieldDirective } from './base.component';
 import { DynamicFieldDirective } from './dynamic-field.directive';
 import { DynamicFormComponent } from './dynamic-form.component';
 import { DynamicFormConfig, ValidationMessagesFn } from './dynamic-form.config';
@@ -10,12 +10,12 @@ import { DYNAMIC_FORM_CONFIG, DYNAMIC_FORM_CONFIG_MAP, DYNAMIC_FORM_VALIDATION_M
 
 
 @NgModule({
-  declarations: [DynamicFormComponent, DynamicFieldDirective, BaseFieldComponent, DynamicFormContentDirective],
+  declarations: [DynamicFormComponent, DynamicFieldDirective, BaseFieldComponent, DynamicFormContentDirective, EditableFieldDirective],
   imports: [
     CommonModule,
     ReactiveFormsModule,
   ],
-  exports: [DynamicFormComponent, BaseFieldComponent, DynamicFieldDirective, DynamicFormContentDirective]
+  exports: [DynamicFormComponent, BaseFieldComponent, DynamicFieldDirective, DynamicFormContentDirective, EditableFieldDirective]
 })
 export class DynamicFormModule {
 
