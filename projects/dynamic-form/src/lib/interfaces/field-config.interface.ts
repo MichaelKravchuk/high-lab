@@ -14,6 +14,7 @@ export interface AbstractFieldInterface {
   class?: string;
   checkChanges?: (currentValue: any, defaultValue: any) => boolean;
   autofocus?: boolean;
+  data?: any;
 }
 
 export interface ControlFieldInterface extends AbstractFieldInterface {

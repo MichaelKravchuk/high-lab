@@ -1,5 +1,5 @@
 import {
-  AfterViewInit,
+  AfterViewInit, ChangeDetectorRef,
   Component, Directive,
   ElementRef,
   HostBinding,
@@ -42,7 +42,9 @@ export class BaseFieldComponent implements OnInit, AfterViewInit {
   @ViewChild(EditableFieldDirective, { read: ElementRef, static: false })
   public readonly editableField?: ElementRef<HTMLElement>;
 
-  constructor(protected readonly elementRef: ElementRef) {}
+  constructor(protected readonly elementRef: ElementRef,
+              protected readonly changeDetectorRef: ChangeDetectorRef
+  ) {}
 
   public ngOnInit() {
     this.control.htmlInstance = this.elementRef.nativeElement;
@@ -51,6 +53,7 @@ export class BaseFieldComponent implements OnInit, AfterViewInit {
   public ngAfterViewInit() {
     if (this.fieldConfig.autofocus && this.editableField instanceof ElementRef) {
       this.editableField.nativeElement.focus();
+      this.changeDetectorRef.detectChanges();
     }
   }
 
