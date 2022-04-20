@@ -1,0 +1,23 @@
+<dynamic-table [dataSource]="data"
+			   [table]="table"
+			   [trackBy]="trackBy"
+			   [templates]="{thumbnail: thumbnail, files: files, more: more}"
+			   (requestPageData)="onDataRequested($event)"
+			   (rowClick)="onClick($event)"
+>
+</dynamic-table>
+
+<ng-template #thumbnail let-row="row" let-cell="cell">
+asfasfasf
+</ng-template>
+
+
+<ng-template #files let-row="row" let-cell="cell">
+	4124124
+</ng-template>
+
+<ng-template #more let-row="row" let-cell="cell">
+	124124
+</ng-template>
+
+{{g}}

@@ -1,0 +1,14 @@
+{
+  "name": "@high-lab/dynamic-table",
+  "version": "0.0.31",
+  "peerDependencies": {
+    "@angular/common": "^12.0.5",
+    "@angular/core": "^12.0.5",
+    "@angular/material": "^12.2.13",
+    "@high-lab/core": "0.0.7",
+    "@high-lab/strict-model": "0.0.3"
+  },
+  "dependencies": {
+    "tslib": "^2.1.0"
+  }
+}

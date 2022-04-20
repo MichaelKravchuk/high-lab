@@ -1,0 +1,37 @@
+@mixin theme($theme-name) {
+  :root .#{$theme-name} {
+    @content
+  }
+}
+
+/*
+  --color-primary
+  --color-primary-tint
+  --color-secondary
+  --color-secondary-tint
+
+
+  --color-success
+  --color-success-tint
+  --color-warning
+  --color-warning-tint
+  --color-danger
+  --color-danger-rgb
+  --color-danger-tint
+
+  --background-color
+  --text-color
+  --text-color-tint
+  --text-color-header
+  --text-color-contrast
+  --divider-color
+
+  --plate-background-color
+  --plate-background-color-tint
+  --plate-nested-background-color
+  --plate-nested-background-color-tint
+  --header-layout-background-color
+
+  --openlayer-icon-color
+*/
+

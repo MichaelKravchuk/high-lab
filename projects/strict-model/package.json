@@ -1,0 +1,9 @@
+{
+  "name": "@high-lab/strict-model",
+  "version": "0.0.3",
+  "license": "MIT",
+  "dependencies": {
+    "tslib": "^2.1.0",
+    "lodash-es": "^4.17.21"
+  }
+}

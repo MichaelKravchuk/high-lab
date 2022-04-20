@@ -1,0 +1,55 @@
+@use 'node_modules/@angular/material' as mat;
+@use 'node_modules/@angular/material/core/theming/palette' as plates;
+
+@include mat.core();
+
+
+$my-primary-plate: (
+  50: #e8eaf6,
+  100: #c5cae9,
+  200: #9fa8da,
+  300: #7986cb,
+  400: #5c6bc0,
+  500: var(--color-primary),
+  600: var(--color-primary),
+  700: #303f9f,
+  800: #283593,
+  900: #1a237e,
+  A100: #8c9eff,
+  A200: #536dfe,
+  A400: #3d5afe,
+  A700: #304ffe,
+  contrast: (
+    50: var(--color-primary),
+    100: var(--color-primary),
+    200: var(--color-primary),
+    300: plates.$light-primary-text,
+    400: plates.$light-primary-text,
+    500: plates.$light-primary-text,
+    600: plates.$light-primary-text,
+    700: plates.$light-primary-text,
+    800: plates.$light-primary-text,
+    900: plates.$light-primary-text,
+    A100: var(--color-primary),
+    A200: plates.$light-primary-text,
+    A400: plates.$light-primary-text,
+    A700: plates.$light-primary-text,
+  )
+);
+
+$my-primary: mat.define-palette($my-primary-plate);
+$my-accent: mat.define-palette(mat.$pink-palette);
+
+$my-theme: mat.define-light-theme((
+  color: (
+    primary: $my-primary,
+    accent: $my-accent,
+  )
+));
+
+$my-typography: mat.define-typography-config(
+    $font-family: 'Circe, Roboto',
+);
+
+@include mat.all-component-typographies($my-typography);
+@include mat.all-component-themes($my-theme);

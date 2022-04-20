@@ -43,3 +43,6 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+/projects/strict-model/node_modules/
+/projects/dynamic-form/node_modules/
+/projects/dynamic-table/node_modules/

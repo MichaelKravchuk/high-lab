@@ -6,12 +6,25 @@
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
     "paths": {
+      "core": [
+        "dist/core/core",
+        "dist/core"
+      ],
       "dynamic-form": [
         "dist/dynamic-form/dynamic-form",
         "dist/dynamic-form"
+      ],
+      "dynamic-table": [
+        "dist/dynamic-table/dynamic-table",
+        "dist/dynamic-table"
+      ],
+      "strict-model": [
+        "dist/strict-model/strict-model",
+        "dist/strict-model"
       ]
     },
-    "strict": true,
+    "strict": false,
+    "noPropertyAccessFromIndexSignature": false,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "sourceMap": true,
@@ -23,7 +36,7 @@
     "target": "es2017",
     "module": "es2020",
     "lib": [
-      "es2018",
+      "es2020",
       "dom"
     ]
   },

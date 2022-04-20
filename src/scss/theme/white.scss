@@ -1,0 +1,29 @@
+@import "core-mixins";
+
+@include theme('white') {
+  --color-primary: #05435C;
+  --color-primary-tint: #04384e;
+  --color-secondary: #92929D;
+  --color-secondary-tint: #7a7a87;
+
+  --color-success: #3DD598;
+  --color-success-tint: #29bf83;
+  --color-warning: #FF974A;
+  --color-warning-tint: #ff7a18;
+  --color-danger: #FC5A5A;
+  --color-danger-rgb: 252, 90, 90;
+  --color-danger-tint: #fb2727;
+
+  --background-color: #F1F1F1;
+  --text-color: #44444F;
+  --text-color-tint: #92929D;
+  --text-color-header: #171725;
+  --text-color-contrast: #FAFAFB;
+  --divider-color: #E2E2EA;
+
+  --plate-background-color: #FFFFFF;
+  --plate-background-color-tint: #d8d8d8;
+  --plate-nested-background-color: #FAFAFB;
+  --plate-nested-background-color-tint: #d0d0d9;
+  --header-layout-background-color: var(--color-primary);
+};

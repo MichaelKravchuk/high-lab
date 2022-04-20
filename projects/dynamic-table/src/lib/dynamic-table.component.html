@@ -1,0 +1,121 @@
+<mat-progress-bar *ngIf="dataSource.isLoading" mode="indeterminate" [style.top.px]="rowHeight - 4"></mat-progress-bar>
+
+<table [style.height]="tableHeight"
+       [style.table-layout]="this.fixSizeByLoading && !this.dataSource.isLoaded ? 'fixed' : 'auto'"
+>
+    <thead>
+        <tr [style.height.px]="rowHeight">
+            <th [class.with-sort]="item.sort"
+                [style.width]="getWidth(index)"
+                #thRef
+                *ngFor="let item of table; let index = index"
+                (click)="onSortChange(item)"
+            >
+               <div class="d-fx ai-c">
+                   {{item.label}}
+
+                   <div *ngIf="item.sort" class="sort">
+                       <mat-icon [class.active]="sortState.active === item.key && sortState.direction === 'asc'">arrow_drop_up</mat-icon>
+                       <mat-icon [class.active]="sortState.active === item.key && sortState.direction === 'desc'">arrow_drop_down</mat-icon>
+                   </div>
+               </div>
+            </th>
+<!--            <ng-container *ngTemplateOutlet="headComponent?.headRef;"></ng-container>-->
+        </tr>
+    </thead>
+
+
+    <tbody [style.height.px]="rowHeight">
+        <ng-container *ngIf="dataSource.isLoading">
+            <tr *ngFor="let item of skeletonRows; let odd = odd">
+                <td class="cell" *ngFor="let x of table">
+                    <div class="content-loader"
+                         [class.content-loader--odd]="odd"
+                    ></div>
+                </td>
+            </tr>
+        </ng-container>
+
+        <ng-container *ngIf="dataSource.isSuccess && !dataSource.isEmptyData">
+            <tr *ngFor="let row of dataSource.data; trackBy: trackBy let index = index"
+                [class.hover]="hoverIndex === index"
+                (click)="onClick($event, row)"
+                (mouseover)="onMouseOver($event, index)"
+                (mouseout)="onMouseOut()"
+            >
+<!--                [class.hover-enabled]="rowComponent.hover"-->
+                <ng-container *ngFor="let cell of table"
+                              cell
+                              [cellConfig]="cell"
+                              [row]="row"
+                              [template]="templates[cell.key]"
+                ></ng-container>
+<!--                <ng-container *ngTemplateOutlet="rowComponent?.rowRef; context: {item}"></ng-container>-->
+            </tr>
+
+            <tr *ngFor="let x of emptyRows" class="empty-row">
+                <td [attr.colSpan]="table.length"></td>
+            </tr>
+        </ng-container>
+
+
+        <ng-container *ngIf="dataSource.isSuccess && dataSource.isEmptyData">
+            <tr>
+                <td [attr.colSpan]="table.length" class="ta-c">
+                    No Data
+                </td>
+            </tr>
+        </ng-container>
+
+        <ng-container *ngIf="dataSource.isFailure">
+            <tr>
+                <td [attr.colSpan]="table.length" class="ta-c">
+                    Oops! Something went wrong.<br/>
+                    Please try again later.
+                </td>
+            </tr>
+        </ng-container>
+    </tbody>
+
+
+    <tfoot>
+        <tr [style.height.px]="rowHeight">
+            <td [attr.colSpan]="table.length">
+
+                <div class="pagination" *ngIf="dataSource.isSuccess || paginationState">
+                    <mat-icon class="pagination__arrow"
+                              [class.pagination__arrow--disabled]="paginationState.isFirstPage"
+                              (click)="onPaginationChange(paginationState.prevPage())"
+                    >chevron_left</mat-icon>
+
+                    <div class="d-fx ai-c" [style.width.px]="paginationState.pageArray.length * 32">
+                        <ng-container *ngFor="let item of paginationState.pageArray; trackBy: trackPaginationBy">
+                            <div class="pagination__page"
+                                 [class.pagination__page--active]="item.value === paginationState.page"
+                                 *ngIf="item.isNumber"
+                                 [@paginationFadeIn]="!firstInit ? 'enabled' : null"
+                                 [@paginationFadeOut]="!firstInit ? 'enabled' : null"
+                                 (click)="onPaginationChange(paginationState.setPage(item.value))"
+                            >{{item.value}}</div>
+
+                            <div class="pagination__space"
+                                 *ngIf="!item.isNumber"
+                                 [@paginationFadeIn]="!firstInit ? 'enabled' : null"
+                                 [@paginationFadeOut]="!firstInit ? 'enabled' : null"
+                            >...</div>
+                        </ng-container>
+                    </div>
+
+                    <mat-icon class="pagination__arrow"
+                              [class.pagination__arrow--disabled]="paginationState.isLastPage"
+                              (click)="onPaginationChange(paginationState.nextPage())"
+                    >chevron_right</mat-icon>
+                </div>
+
+                <div class="d-fx ai-c jc-c" *ngIf="dataSource.isLoading && !paginationState">
+                    <div class="content-loader mr-x" *ngFor="let x of [0, 0, 0 ,0 ,0, 0, 0]"></div>
+                </div>
+            </td>
+        </tr>
+    </tfoot>
+</table>

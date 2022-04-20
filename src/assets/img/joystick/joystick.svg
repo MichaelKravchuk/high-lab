@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="64" viewBox="0 0 64 64">
+    <defs>
+        <radialGradient id="prefix__c" cx="50%" cy="50.002%" r="86.659%" fx="50%" fy="50.002%">
+            <stop offset=".003%" stop-color="#FFF"/>
+            <stop offset="34.89%" stop-color="#FFF"/>
+            <stop offset="100%" stop-color="#828282"/>
+        </radialGradient>
+        <linearGradient id="prefix__d" x1="50%" x2="50%" y1="50%" y2="0%">
+            <stop offset="0%" stop-color="#E5E5E5"/>
+            <stop offset="100%" stop-color="#626262"/>
+        </linearGradient>
+        <filter id="prefix__a" width="137%" height="137%" x="-18.5%" y="-9.3%" filterUnits="objectBoundingBox">
+            <feOffset dy="5" in="SourceAlpha" result="shadowOffsetOuter1"/>
+            <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="2.5"/>
+            <feColorMatrix in="shadowBlurOuter1" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.609921329 0"/>
+        </filter>
+        <circle id="prefix__b" cx="27" cy="27" r="27"/>
+    </defs>
+    <g fill="none" fill-rule="evenodd" transform="translate(5)">
+        <use fill="#000" filter="url(#prefix__a)" xlink:href="#prefix__b"/>
+        <use fill="url(#prefix__c)" xlink:href="#prefix__b"/>
+        <circle cx="27" cy="13" r="3" fill="url(#prefix__d)"/>
+        <circle cx="27" cy="41" r="3" fill="url(#prefix__d)"/>
+        <circle cx="41" cy="27" r="3" fill="url(#prefix__d)"/>
+        <circle cx="13" cy="27" r="3" fill="url(#prefix__d)"/>
+    </g>
+</svg>
