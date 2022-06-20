@@ -1,7 +1,10 @@
-import { ExtendedFormArray, ExtendedFormControl, ExtendedFormGroup } from '../../form-controls';
+import { ExtendedControls, ExtendedFormArray, ExtendedFormControl, ExtendedFormGroup } from '../../form-controls';
+import { ErrorObject } from '../../interfaces';
 
 export class CommonHelper {
-  public static instantError(control: ExtendedFormControl | ExtendedFormGroup | ExtendedFormArray): string | null {
+  public static instantError(control: ExtendedControls, asString: false): ErrorObject | null;
+  public static instantError(control: ExtendedControls, asString: true): string | null
+  public static instantError(control: ExtendedControls, asString: boolean = true): string | null | ErrorObject {
     let firstKey = '';
     const errors = control.errors;
 
@@ -19,13 +22,19 @@ export class CommonHelper {
     const customError = control.fieldConfig.validationMessages && control.fieldConfig.validationMessages[firstKey];
     const root = control.root as ExtendedFormGroup;
     const rootValidationMessage = root.defaultValidationMessages && root.defaultValidationMessages[firstKey]
-    const error = customError || rootValidationMessage || 'Error';
+    const error = customError || rootValidationMessage || firstKey;
+
+    let errorString = error as string;
 
     if (typeof error === 'function') {
-      return error(errors[firstKey]);
+      errorString = error(errors[firstKey]);
     }
 
-    return error;
+    if (!asString) {
+      return { key: firstKey, message: errorString, params: errors[firstKey] }
+    }
+
+    return errorString;
   }
 
   public static getFirstInvalidControl(control: ExtendedFormGroup | ExtendedFormArray): ExtendedFormControl | null {

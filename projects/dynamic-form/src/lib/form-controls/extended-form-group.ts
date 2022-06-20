@@ -4,6 +4,7 @@ import { filter, map, startWith } from 'rxjs/operators';
 import { GroupField } from '../base.field';
 import { ValidationMessages } from '../dynamic-form.config';
 import { CommonHelper, RandomHelper } from '../helpers';
+import { ErrorObject } from '../interfaces';
 import { ExtendedControls } from './index';
 
 
@@ -21,7 +22,12 @@ export class ExtendedFormGroup extends FormGroup {
 
   public error: Observable<string | null> = this.statusChanges.pipe(
     startWith(false),
-    map(() => CommonHelper.instantError(this))
+    map(() => CommonHelper.instantError(this, true))
+  );
+
+  public errorObject: Observable<ErrorObject | null> = this.statusChanges.pipe(
+    startWith(false),
+    map(() => CommonHelper.instantError(this, false))
   );
 
   public get canShowError(): boolean {
@@ -29,10 +35,6 @@ export class ExtendedFormGroup extends FormGroup {
   }
 
   public get isChangedByUser(): boolean {
-    if (!this.defaultValuePatched) {
-      return false;
-    }
-
     if (this.fieldConfig && typeof this.fieldConfig.checkChanges === 'function') {
       return this.fieldConfig.checkChanges(this.value, this.defaultValuePatched);
     }

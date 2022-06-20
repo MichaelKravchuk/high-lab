@@ -74,8 +74,25 @@ function createFormGroupControl(config: GroupField, parentPath: string, rootForm
 }
 
 function createFormArrayControl(config: ArrayField, parentPath: string, rootForm: ExtendedFormGroup): ExtendedFormArray {
-  const parent = new ExtendedFormArray(() => {
-    return createFormGroupControl(config, parent.pathFromRoot, rootForm);
+  const parent = new ExtendedFormArray((value?: any) => {
+    let fabricConfig;
+
+    if (typeof config.configs === 'function') {
+      fabricConfig = config.configs(value)
+    } else {
+      fabricConfig = config.configs
+    }
+
+    if (isNullConfig(fabricConfig)) {
+      return null;
+    }
+
+    const control = debouncer(fabricConfig, parent.pathFromRoot, rootForm);
+    control.fieldConfig = fabricConfig as any;
+
+    postProcess(control, config, rootForm);
+
+    return control
   }, config.validatorOrOpts, config.asyncValidator) as any;
 
   parent.pathFromRoot = joinPath(parentPath, config.key);
@@ -194,25 +211,14 @@ function removeControls(configs: Array<AbstractFieldInterface>, parent: Extended
 }
 
 
-function controlIsVisible(config: RelatedFieldInterface, controlValues: any[], control: AbstractControl): boolean {
+function controlIsVisible(config: RelatedFieldInterface, controlValues: any[], control: ExtendedControls): boolean {
   const prevControlValue = controlValues[0];
   const controlValue = controlValues[1];
 
   switch (typeof config.checkVisibility) {
-    case 'boolean':
-    case 'string':
-    case 'number': {
-      return controlValue === config.checkVisibility;
-    }
     case 'function': {
       // @ts-ignore
       return config.checkVisibility(controlValue, prevControlValue, control);
-    }
-    case 'object': {
-      if (Array.isArray(config.checkVisibility)) {
-        return config.checkVisibility
-          .some(item => item === controlValue);
-      }
     }
   }
 

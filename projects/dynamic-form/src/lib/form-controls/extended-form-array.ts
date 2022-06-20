@@ -3,8 +3,9 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { ArrayField } from '../base.field';
 import { CommonHelper, RandomHelper } from '../helpers';
+import { ErrorObject } from '../interfaces';
 
-import { ExtendedFormControl, ExtendedFormGroup } from './index';
+import { ExtendedControls, ExtendedFormControl, ExtendedFormGroup } from './index';
 
 export class ExtendedFormArray extends FormArray {
   public readonly id = RandomHelper.NumId;
@@ -12,7 +13,7 @@ export class ExtendedFormArray extends FormArray {
   private lastPatchedValue: any;
 
   public pathFromRoot!: string;
-  public controls!: Array<ExtendedFormGroup>;
+  public override controls!: Array<ExtendedFormGroup>;
   public childrenControls!: Array<ExtendedFormGroup>;
   public fieldConfig!: ArrayField;
   public canAddRow: (() => boolean) | boolean = true;
@@ -21,10 +22,15 @@ export class ExtendedFormArray extends FormArray {
 
   public error: Observable<string | null> = this.statusChanges.pipe(
     startWith(false),
-    map(() => CommonHelper.instantError(this))
+    map(() => CommonHelper.instantError(this, true))
   );
 
-  constructor(public formGroupFabric: () => ExtendedFormGroup,
+  public errorObject: Observable<ErrorObject | null> = this.statusChanges.pipe(
+    startWith(false),
+    map(() => CommonHelper.instantError(this, false))
+  );
+
+  constructor(public formGroupFabric: (value?: any) => ExtendedControls,
               validatorOrOpts?: ValidatorFn | ValidatorFn[] | AbstractControlOptions | null,
               asyncValidator?: AsyncValidatorFn | AsyncValidatorFn[] | null,
   ) {
@@ -44,7 +50,7 @@ export class ExtendedFormArray extends FormArray {
       return this.fieldConfig.checkChanges(this.value, this.defaultValuePatched);
     }
 
-    return this.defaultValuePatched && this.controls.some(control => control.isChangedByUser);
+    return this.controls.some(control => control.isChangedByUser);
   }
 
   public patchValue(value: { [key: string]: any }[], options: { onlySelf?: boolean, emitEvent?: boolean, useAsDefault?: boolean } = {}): void {
@@ -56,12 +62,10 @@ export class ExtendedFormArray extends FormArray {
       this.defaultValuePatched = true;
     }
 
-    for (let i = this.controls.length; i > value.length; i--) {
-      this.removeControl(i - 1);
-    }
+    this.removeAllControls()
 
     for (let i = this.controls.length; i < value.length; i++) {
-      this.addControl();
+      this.addControl(value[i]);
     }
 
     value.forEach(((newValue, index) => {
@@ -104,12 +108,10 @@ export class ExtendedFormArray extends FormArray {
     }
 
     if (Array.isArray(this.lastPatchedValue)) {
-      for (let i = this.controls.length; i > this.lastPatchedValue.length; i--) {
-        this.removeControl(i - 1);
-      }
+      this.removeAllControls()
 
       for (let i = this.controls.length; i < this.lastPatchedValue.length; i++) {
-        this.addControl();
+        this.addControl(this.lastPatchedValue[i]);
       }
 
       this.controls.forEach((control, index) => {
@@ -124,8 +126,12 @@ export class ExtendedFormArray extends FormArray {
     this.childrenControls = [...this.controls];
   }
 
-  public addControl(): any {
-    const control = this.formGroupFabric();
+  public addControl(value?: any): any {
+    const control = this.formGroupFabric(value);
+
+    if (!control) {
+      return
+    }
 
     if (this.disabled) {
       control.disable({ emitEvent: false });

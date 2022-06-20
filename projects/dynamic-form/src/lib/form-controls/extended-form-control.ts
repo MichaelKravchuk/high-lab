@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { ControlField } from '../base.field';
 import { CommonHelper, RandomHelper } from '../helpers';
+import { ErrorObject } from '../interfaces';
 
 export class ExtendedFormControl extends FormControl {
   public readonly id = RandomHelper.NumId;
@@ -14,7 +15,12 @@ export class ExtendedFormControl extends FormControl {
 
   public error: Observable<string | null> = this.statusChanges.pipe(
     startWith(false),
-    map(() => CommonHelper.instantError(this))
+    map(() => CommonHelper.instantError(this, true))
+  );
+
+  public errorObject: Observable<ErrorObject | null> = this.statusChanges.pipe(
+    startWith(false),
+    map(() => CommonHelper.instantError(this, false))
   );
 
   public get canShowError(): boolean {

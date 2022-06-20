@@ -1,6 +1,7 @@
 import { AbstractControl, AbstractControlOptions, AsyncValidatorFn, ValidatorFn } from '@angular/forms';
 import { AbstractField, GroupField } from '../base.field';
 import { ValidationMessages } from '../dynamic-form.config';
+import { ExtendedControls } from '../form-controls';
 
 export interface AbstractFieldInterface {
   validatorOrOpts?: ValidatorFn | ValidatorFn[] | AbstractControlOptions | null;
@@ -31,18 +32,24 @@ export interface GroupFieldInterface extends AbstractFieldInterface {
 }
 
 export interface ArrayFieldInterface extends  AbstractFieldInterface {
-  configs: Array<AbstractField>;
+  configs: AbstractField | ((value) => AbstractField);
 }
 
 export interface RelatedFieldInterface {
   configs: AbstractField[] | RelatedFieldsConfigFunction;
-  checkVisibility: RelatedFieldsCheckVisibilityFunction | string | number | boolean | Array<string & number>;
+  checkVisibility: RelatedFieldsCheckVisibilityFunction;
 }
 
-type RelatedFieldsCheckVisibilityFunction = (currentValue: any, prevValue: any, control: AbstractControl) => boolean;
-type RelatedFieldsConfigFunction = (currentValue: any, prevValue: any, control: AbstractControl) => AbstractField[];
+type RelatedFieldsCheckVisibilityFunction = (currentValue: any, prevValue: any, control: ExtendedControls) => boolean;
+type RelatedFieldsConfigFunction = (currentValue: any, prevValue: any, control: ExtendedControls) => AbstractField[];
 
 export interface FieldOption<T = any> {
   label: string;
   value: T;
+}
+
+export interface ErrorObject {
+  message: string;
+  params: any;
+  key: string;
 }

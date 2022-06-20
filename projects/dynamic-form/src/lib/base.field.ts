@@ -90,7 +90,7 @@ export class GroupField extends AbstractField implements GroupFieldInterface {
 
 
 export class ArrayField extends AbstractField implements ArrayFieldInterface {
-  public configs: Array<AbstractField>;
+  public configs: AbstractField | ((value) => AbstractField);
 
   constructor(options: ArrayFieldInterface) {
     super(options)
