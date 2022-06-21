@@ -134,6 +134,6 @@ export class ExtendedFormGroup extends FormGroup {
         (acc as any)[control.fieldConfig.key] = (control as any).getRawValue(params);
       }
       return acc;
-    }) as any;
+    }, {}) as any;
   }
 }

@@ -160,9 +160,9 @@ export class ExtendedFormArray extends FormArray {
   public getRawValue(params = { ignoredFields: false }): any {
     return this.childrenControls.reduce((acc, control) => {
       if (!control.fieldConfig.ignore || params.ignoredFields) {
-        (acc as any)[control.fieldConfig.key] = (control as any).getRawValue(params);
+        acc.push((control as any).getRawValue(params));
       }
       return acc;
-    }) as any;
+    }, []) as any;
   }
 }
