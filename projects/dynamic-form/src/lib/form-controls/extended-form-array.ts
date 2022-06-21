@@ -14,7 +14,6 @@ export class ExtendedFormArray extends FormArray {
 
   public pathFromRoot!: string;
   public override controls!: Array<ExtendedFormGroup>;
-  public childrenControls!: Array<ExtendedFormGroup>;
   public fieldConfig!: ArrayField;
   public canAddRow: (() => boolean) | boolean = true;
   public defaultValuePatched = false;
@@ -36,6 +35,10 @@ export class ExtendedFormArray extends FormArray {
   ) {
     super([], validatorOrOpts, asyncValidator);
   }
+
+  public get childrenControls(): Array<ExtendedFormGroup> {
+    return this.controls
+  };
 
   public get(path: Array<string | number> | string): ExtendedFormControl {
     return super.get(path) as ExtendedFormControl;
@@ -122,9 +125,7 @@ export class ExtendedFormArray extends FormArray {
     }
   }
 
-  public updateChildrenControls(): void {
-    this.childrenControls = [...this.controls];
-  }
+  public updateChildrenControls(): void {}
 
   public addControl(value?: any): any {
     const control = this.formGroupFabric(value);
@@ -154,5 +155,14 @@ export class ExtendedFormArray extends FormArray {
     while (this.controls.length !== 0) {
       this.removeAt(0);
     }
+  }
+
+  public getRawValue(params = { ignoredFields: false }): any {
+    return this.childrenControls.reduce((acc, control, name) => {
+      if (!control.fieldConfig.ignore || params.ignoredFields) {
+        (acc as any)[name] = (control as any).getRawValue(params);
+      }
+      return acc;
+    }) as any;
   }
 }

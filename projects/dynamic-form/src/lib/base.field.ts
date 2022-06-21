@@ -25,6 +25,7 @@ export class AbstractField implements AbstractFieldInterface {
   public checkChanges?: (currentValue: any, defaultValue: any) => boolean;
   public autofocus?: boolean;
   public data?: any;
+  public ignore?: boolean;
 
   constructor(options: AbstractFieldInterface) {
     this.validatorOrOpts = options.validatorOrOpts;
@@ -39,6 +40,7 @@ export class AbstractField implements AbstractFieldInterface {
     this.autofocus = options.autofocus;
     this.data = options.data;
     this.formControl = ExtendedFormControl;
+    this.ignore = options.ignore;
   }
 }
 

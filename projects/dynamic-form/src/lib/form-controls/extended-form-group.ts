@@ -127,4 +127,13 @@ export class ExtendedFormGroup extends FormGroup {
       filter(v => !!v)
     );
   }
+
+  public getRawValue(params = { ignoredFields: false }): any {
+    return this.childrenControls.reduce((acc, control, name) => {
+      if (!control.fieldConfig.ignore || params.ignoredFields) {
+        (acc as any)[name] = (control as any).getRawValue(params);
+      }
+      return acc;
+    }) as any;
+  }
 }
