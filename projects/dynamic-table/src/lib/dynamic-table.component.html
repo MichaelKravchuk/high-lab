@@ -62,7 +62,7 @@
         <ng-container *ngIf="dataSource.isSuccess && dataSource.isEmptyData">
             <tr>
                 <td [attr.colSpan]="table.length" class="ta-c">
-                    No Data
+                  {{noDataMessage || 'No Data'}}
                 </td>
             </tr>
         </ng-container>

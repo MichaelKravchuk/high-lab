@@ -64,7 +64,10 @@ export class DynamicTableComponent<T> implements OnChanges, OnInit, OnDestroy {
 	@Input()
 	public rowHeight = 56;
 
-	@Input()
+  @Input()
+  public noDataMessage: string;
+
+  @Input()
 	public queryParamsMapping: DataTableQueryParamsMapping = {
 		page: 'page',
 		pageSize: 'pageSize',
